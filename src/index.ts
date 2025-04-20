@@ -131,7 +131,7 @@ export default {
 
 		} catch (error) {
 			// Im Fehlerfall: Healthchecks ebenfalls benachrichtigen
-			await fetch('https://hc-ping.com/Mu-fwUbKI9icDXv98NqzFg/ddns', {
+			await fetch('https://hc-ping.com/Mu-fwUbKI9icDXv98NqzFg/ddns/fail', {
 				method: 'POST',
 				body: JSON.stringify({
 					error: String(error),
