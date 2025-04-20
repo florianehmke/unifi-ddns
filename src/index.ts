@@ -120,9 +120,24 @@ export default {
 			const clientOptions = constructClientOptions(request);
 			const record = constructDNSRecord(request);
 
-			// Run the update function
-			return await update(clientOptions, record);
+			// Führe das Update aus
+			const response = await update(clientOptions, record);
+
+			// Bei Erfolg: Healthchecks pingen
+			await fetch('https://hc-ping.com/Mu-fwUbKI9icDXv98NqzFg/ddns');
+
+			// Erfolg zurückgeben
+			return response;
+
 		} catch (error) {
+			// Im Fehlerfall: Healthchecks ebenfalls benachrichtigen
+			await fetch('https://hc-ping.com/Mu-fwUbKI9icDXv98NqzFg/ddns', {
+				method: 'POST',
+				body: JSON.stringify({
+					error: String(error),
+				})
+			});
+
 			if (error instanceof HttpError) {
 				console.log('Error updating DNS record: ' + error.message);
 				return new Response(error.message, { status: error.statusCode });
